@@ -123,25 +123,8 @@ su astronaut -c "cp /home/astronaut/.astroarch/configs/kwinrc /home/astronaut/.c
 cp -R /home/astronaut/.astroarch/configs/org.kde.astroarch.desktop /usr/share/plasma/look-and-feel/
 su astronaut -c "cp /home/astronaut/.astroarch/configs/ksplashrc /home/astronaut/.config"
 
-# GPS copy gps config & configure chrony
-rm /etc/default/gpsd
-cp /home/astronaut/.astroarch/configs/gpsd /etc/default/
-echo 'refclock SHM 0 offset 0.5 delay 0.2 refid NMEA' >> /etc/chrony.conf
-echo 'driftfile /var/lib/chrony/drift' >> /etc/chrony.conf
-
-# Configuration Very Secure FTP Daemon
-rm  /etc/vsftpd.conf
-cp /home/astronaut/.astroarch/configs/vsftpd.conf  /etc/
-cp /home/astronaut/.astroarch/configs/vsftpd.chroot_list /etc/
-
-# Bluetooch
-sed -i 's/#DiscoverableTimeout=0/DiscoverableTimeout=0/g' /etc/bluetooth/main.conf
-sed -i 's/#AlwaysPairable=true/AlwaysPairable=true/g' /etc/bluetooth/main.conf
-sed -i 's/#PairableTimeout=0/PairableTimeout=0/g' /etc/bluetooth/main.conf
-sed -i 's/#AutoEnable=true/AutoEnable=true/g' /etc/bluetooth/main.conf
-
 # Enable now all services
-systemctl enable sddm.service novnc.service dhcpcd.service NetworkManager.service avahi-daemon.service nmb.service smb.service gpsd.service vsftpd.service bluetooth.service
+systemctl enable sddm.service novnc.service dhcpcd.service NetworkManager.service avahi-daemon.service nmb.service smb.service
 
 # Take sudoers to the original state
 sed -i 's/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/g' /etc/sudoers

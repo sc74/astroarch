@@ -63,6 +63,8 @@ function astro-rollback-kstars()
 
 function update-astroarch()
 {
+    USER=astronaut
+
     # Store actual version
     OLD_VER=$(cat /home/$USER/.astroarch.version)
 
@@ -79,8 +81,64 @@ function update-astroarch()
 
     # Update always keyring first, than all of the other packages
     sudo pacman -Sy
-    sudo pacman -S archlinux-keyring --noconfirm
+    yes | LC_ALL=en_US.UTF-8 sudo pacman -S archlinux-keyring
 
     # Now upgrade all system packages
-    sudo pacman -Syu --noconfirm
+    yes | LC_ALL=en_US.UTF-8 sudo pacman -Syu
+}
+
+function gps_on()
+{
+    # GPS copy gps config & configure chrony
+    sudo rm -f /etc/default/gpsd
+    sudo cp /home/astronaut/.astroarch/configs/gpsd /etc/default/gpsd
+    sudo sed -i '$a refclock SHM 0 offset 0.5 delay 0.2 refid NMEA' /etc/chrony.conf
+    sudo sed -i '$a driftfile /var/lib/chrony/drift' /etc/chrony.conf
+    sudo systemctl enable gpsd.service
+}
+
+function gps_off()
+{
+    sudo systemctl stop gpsd.service
+    sudo systemctl disable gpsd.service
+    sudo sed -i '/refclock SHM 0 offset 0.5 delay 0.2 refid NMEA/d' /etc/chrony.conf
+    sudo sed -i '/driftfile \/var\/lib\/chrony\/drift/d' /etc/chrony.conf
+}
+
+function ftp_on()
+{
+    yes | LC_ALL=en_US.UTF-8 sudo pacman -S vsftpd
+    sudo rm  /etc/vsftpd.conf
+    sudo cp /home/astronaut/.astroarch/configs/vsftpd.conf  /etc/
+    sudo cp /home/astronaut/.astroarch/configs/vsftpd.chroot_list /etc/
+    sudo systemctl enable vsftpd.service
+}
+
+function ftp_off()
+{
+    sudo systemctl stop vsftpd.service
+    sudo systemctl disable vsftpd.service
+    sudo rm -f /etc/vsftpd.conf
+    sudo rm -f  /etc/vsftpd.chroot_list
+}
+
+function bluetooth_on()
+{
+    yes | LC_ALL=en_US.UTF-8 sudo pacman -S bluez bluez-utils bluez-hid2hci bluedevil
+    # Bluetooch config
+    sudo sed -i 's/#DiscoverableTimeout=0/DiscoverableTimeout=0/g' /etc/bluetooth/main.conf
+    sudo sed -i 's/#AlwaysPairable=true/AlwaysPairable=true/g' /etc/bluetooth/main.conf
+    sudo sed -i 's/#PairableTimeout=0/PairableTimeout=0/g' /etc/bluetooth/main.conf
+    sudo sed -i 's/#AutoEnable=true/AutoEnable=true/g' /etc/bluetooth/main.conf
+    sudo systemctl enable bluetooth.service
+}
+
+function bluetooth_off()
+{
+    sudo systemctl stop bluetooth.service
+    sudo systemctl disable bluetooth.service
+    sudo sed -i 's/DiscoverableTimeout=0/#DiscoverableTimeout=0/g' /etc/bluetooth/main.conf
+    sudo sed -i 's/AlwaysPairable=true/#AlwaysPairable=true/g' /etc/bluetooth/main.conf
+    sudo sed -i 's/PairableTimeout=0/#PairableTimeout=0/g' /etc/bluetooth/main.conf
+    sudo sed -i 's/AutoEnable=true/#AutoEnable=true/g' /etc/bluetooth/main.conf
 }
