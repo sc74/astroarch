@@ -158,7 +158,7 @@ function update-astroarch()
 
         found_risk=0
         for dep in $deps; do
-            # Si une de ses dépendances est mise à jour
+            # If one of its dependencies is updated
             if [[ ${upgrading_names[(i)$dep]} -le ${#upgrading_names} ]]; then
                 new_ver=$(echo $updates | grep ^$dep | awk '{print $3}')
                 old_ver=$(pacman -Q "$dep" | awk '{print $2}')
