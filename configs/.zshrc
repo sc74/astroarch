@@ -141,8 +141,9 @@ function update-astroarch()
         return 0
     fi
 
-    upgrading_names=$(echo "$updates" | awk '{print $1}')
-
+    upgrading_names=(${(f)"$(echo "$updates" | awk '{print $1}')"})
+    found_risk=0
+    broken_deps_list=()
     # Analysis of dependencies
     for pkg in $WATCHLIST; do
         if ! pacman -Qi "$pkg" &> /dev/null; then
@@ -156,14 +157,17 @@ function update-astroarch()
 
         deps=(${(f)"$(pactree -u "$pkg" | grep -v "$pkg")"})
 
-        found_risk=0
         for dep in $deps; do
             # If one of its dependencies is updated
             if [[ ${upgrading_names[(i)$dep]} -le ${#upgrading_names} ]]; then
-                new_ver=$(echo $updates | grep ^$dep | awk '{print $3}')
+                new_ver=$(echo "$updates" | grep -w "^$dep" | awk '{print $4}')
                 old_ver=$(pacman -Q "$dep" | awk '{print $2}')
+
                 echo "⚠️ RISK: The dependency ‘$dep’ will change ($old_ver -> $new_ver)"
                 echo "$pkg: may no longer be able to find its libraries"
+
+                # Store the conflict info for the final summary
+                broken_deps_list+=("$pkg depends on $dep ($old_ver -> $new_ver)")
                 found_risk=1
             fi
         done
@@ -173,7 +177,15 @@ function update-astroarch()
 
     if [ $found_risk -eq 1 ]; then
         echo "❗ Warning: Some critical packages have dependencies that will change. The update cannot be performed"
-        notify-send --app-name 'AstroArch' --icon="/home/astronaut/.astroarch/assets/icons/novnc-icon.svg" -t 10000 'Update AstroArch' "❌ Warning: Some critical packages have dependencies that will change. The update cannot be performed"
+        echo "❌ Dependency Risks:"
+        for conflict in $broken_deps_list; do
+            echo "- $conflict"
+        done
+
+        list_str="${(j:\n:)broken_deps_list}"
+        notify-send --app-name 'AstroArch' --icon="/home/astronaut/.astroarch/assets/icons/novnc-icon.svg" -t 10000 'Update AstroArch' "! Warning: Some critical packages have dependencies that will change. The update cannot be performed"
+        notify-send --app-name 'AstroArch' --icon="/home/astronaut/.astroarch/assets/icons/novnc-icon.svg" -t 15000 'Update AstroArch' "❌ Dependency Risks: $list_str"
+
         return 0
     else
 
