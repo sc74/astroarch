@@ -114,17 +114,111 @@ function update-astroarch()
     # Update always keyring first, than all of the other packages
     sudo pacman -S archlinux-keyring --noconfirm
 
-    # Now upgrade all system packages, but ask user to choose in case of conflicts/choices
-    sudo pacman -Syu --noconfirm
+    # Testing libraries before updating
+    # --- Configuration ---
+    BACKUP_DIR="$HOME/pacman_backups"
+    WATCHLIST_FILE="$HOME/.astroarch/configs/astroarch-maintained-packages-list.txt"
+    mkdir -p "$BACKUP_DIR"
+    DATE=$(date +%F_%H-%M)
 
-    if [ $? -eq 0 ]; then
-    notify-send --app-name 'AstroArch' --icon="/home/astronaut/.astroarch/assets/icons/novnc-icon.svg" -t 10000 'Update AstroArch' "Successful update"
+    # --- Loading WATCHLIST ---
+    if [[ -f "$WATCHLIST_FILE" ]]; then
+        WATCHLIST=( ${(f)"$(grep -v '^#' "$WATCHLIST_FILE" | sed '/^$/d')"} )
+        echo "✅ Watchlist loaded : ${#WATCHLIST} packages found"
     else
-    notify-send --app-name 'AstroArch' --icon="/home/astronaut/.astroarch/assets/icons/novnc-icon.svg" -t 10000 'Update AstroArch' "Update failed"
+        echo "❌ Error: File $WATCHLIST_FILE not found"
+        return 1
     fi
 
-    # Reinstall plasma-x11-session, cannot work on 1.9.0 cause of old kwin
-    sudo pacman -Sy plasma-x11-session --noconfirm
+    # Saving the current state of packages
+    mkdir -p "$BACKUP_DIR"
+    pacman -Q > "$BACKUP_DIR/full_snapshot_$DATE.txt"
+
+    # Simulation of updates
+    updates=$(checkupdates)
+    if [ -z "$updates" ]; then
+        echo "✅ System already up to date"
+        notify-send --app-name 'AstroArch' --icon="/home/astronaut/.astroarch/assets/icons/novnc-icon.svg" -t 10000 'Update AstroArch' "✅ System already up to date"
+        return 0
+    fi
+
+    upgrading_names=(${(f)"$(echo "$updates" | awk '{print $1}')"})
+    found_risk=0
+    broken_deps_list=()
+    # Analysis of dependencies
+    for pkg in $WATCHLIST; do
+        if ! pacman -Qi "$pkg" &> /dev/null; then
+            echo "⚠️  [Info] $pkg is not installed on the system"
+            continue
+        fi
+
+        if [[ ${upgrading_names[(i)$pkg]} -le ${#upgrading_names} ]]; then
+        echo "🟢 $pkg: Included in the update (Low priority: will be synchronized)"
+        else
+
+        deps=(${(f)"$(pactree -u "$pkg" | grep -v "$pkg")"})
+
+        for dep in $deps; do
+            # If one of its dependencies is updated
+            if [[ ${upgrading_names[(i)$dep]} -le ${#upgrading_names} ]]; then
+                new_ver=$(echo "$updates" | grep -w "^$dep" | awk '{print $4}')
+                old_ver=$(pacman -Q "$dep" | awk '{print $2}')
+
+                echo "⚠️ RISK: The dependency ‘$dep’ will change ($old_ver -> $new_ver)"
+                echo "$pkg: may no longer be able to find its libraries"
+
+                # Store the conflict info for the final summary
+                broken_deps_list+=("$pkg depends on $dep ($old_ver -> $new_ver)")
+                found_risk=1
+            fi
+        done
+        [[ $found_risk -eq 0 ]] && echo "✅ $pkg : No dependency conflicts detected"
+        fi
+    done
+
+    if [ $found_risk -eq 1 ]; then
+        echo "❗ Warning: Some critical packages have dependencies that will change. The update cannot be performed"
+        echo "❌ Dependency Risks:"
+        for conflict in $broken_deps_list; do
+            echo "- $conflict"
+        done
+
+        list_str="${(j:\n:)broken_deps_list}"
+        # Save the risks to a log file for history
+        local RISK_LOG="$BACKUP_DIR/dependency_risks_$DATE.txt"
+        echo "Dependency risks detected on $(date)" > "$RISK_LOG"
+        echo "------------------------------------" >> "$RISK_LOG"
+        echo "- $list_str" >> "$RISK_LOG"
+        echo "⚠️  Dependency risks detected. Details saved to $RISK_LOG"
+
+        notify-send --app-name 'AstroArch' --icon="/home/astronaut/.astroarch/assets/icons/novnc-icon.svg" -t 10000 'Update AstroArch' "! Warning: Some critical packages have dependencies that will change"
+        notify-send --app-name 'AstroArch' --icon="/home/astronaut/.astroarch/assets/icons/novnc-icon.svg" -t 15000 'Update AstroArch' "❌ Dependency Risks: $list_str"
+        notify-send --app-name 'AstroArch' --icon="/home/astronaut/.astroarch/assets/icons/novnc-icon.svg" -t 15000 'Update AstroArch' "⚠️  Dependency risks detected. Details saved to $RISK_LOG"
+
+        # Confirmation request via kdialog
+        kdialog --title "AstroArch Update - Risk of Addiction" \
+                --warningyesno "Warning! The following critical packages will have their dependencies changed:\n\n- $list_str\n\nDo you want to proceed the update anyway?"
+
+        # If the user clicks “No”
+        if [ $? -ne 0 ]; then
+            echo "❌ Update canceled by user."
+            notify-send --app-name 'AstroArch' --icon="/home/astronaut/.astroarch/assets/icons/novnc-icon.svg" -t 10000 'Update AstroArch' "❌ Update canceled by user"
+            return 0
+        else
+
+        # Now upgrade all system packages, but ask user to choose in case of conflicts/choices
+        sudo pacman -Syu --noconfirm
+
+        if [ $? -eq 0 ]; then
+        notify-send --app-name 'AstroArch' --icon="/home/astronaut/.astroarch/assets/icons/novnc-icon.svg" -t 10000 'Update AstroArch' "✅ Successful update"
+        else
+        notify-send --app-name 'AstroArch' --icon="/home/astronaut/.astroarch/assets/icons/novnc-icon.svg" -t 10000 'Update AstroArch' "❌ Update failed"
+        fi
+
+        # Reinstall plasma-x11-session, cannot work on 1.9.0 cause of old kwin
+        sudo pacman -Sy plasma-x11-session --noconfirm
+        fi
+    fi
 }
 
 function xyz () {
