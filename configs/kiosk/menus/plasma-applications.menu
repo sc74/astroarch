@@ -8,16 +8,20 @@
 
     <Include>
 
-<!--        <Filename>org.kde.kstars.desktop</Filename> -->
-<!--        <Filename>phd2.desktop</Filename> -->
-<!--        <Filename>astrodmx_capture.desktop</Filename> -->
-<!--        <Filename>xgps.desktop</Filename> -->
+<!-- <Filename>org.kde.kstars.desktop</Filename> -->
+<!-- <Filename>phd2.desktop</Filename> -->
+<!-- <Filename>astrodmx_capture.desktop</Filename> -->
+<!-- <Filename>xgps.desktop</Filename> -->
+        <Filename>org.kde.dolphin.desktop</Filename>
+        <Filename>org.kde.konsole.desktop</Filename>
     </Include>
 
     <Layout>
-<!--        <Filename>org.kde.kstars.desktop</Filename> -->
-<!--        <Filename>phd2.desktop</Filename> -->
-<!--        <Filename>astrodmx_capture.desktop</Filename> -->
-<!--        <Filename>xgps.desktop</Filename> -->
+<!-- <Filename>org.kde.kstars.desktop</Filename> -->
+<!-- <Filename>phd2.desktop</Filename> -->
+<!-- <Filename>astrodmx_capture.desktop</Filename> -->
+<!-- <Filename>xgps.desktop</Filename> -->
+        <Filename>org.kde.dolphin.desktop</Filename>
+        <Filename>org.kde.konsole.desktop</Filename>
     </Layout>
 </Menu>

@@ -12,6 +12,10 @@ rm -f $HOME/.cache/ksycoca6*
 
 DESKTOP_DIR="$HOME/Desktop"
 mkdir -p "$DESKTOP_DIR"
+rm $DESKTOP_DIR/*
+
+# Minimal desktop
+ln -snf /home/astronaut/.astroarch/desktop/astroarch-config-kiosk.desktop /home/astronaut-kiosk/Desktop/Astroarch-config-Kiosk
 
 # List of applications to check (Source -> Name on desktop)
 declare -A APPS
@@ -105,7 +109,7 @@ for (var i in panels) {
 
 plasmashell --replace &
 
-chmod -R 775 "$HOME"
+chmod -R 777 "$HOME"
 
 
 # App monitoring

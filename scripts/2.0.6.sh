@@ -21,7 +21,7 @@ sudo cp /home/astronaut/.astroarch/configs/startwm.sh /home/astronaut-kiosk/
 sudo cp /home/astronaut/.astroarch/configs/kiosk/.xinitrc /home/astronaut-kiosk/
 
 # Copy wallpapers
-su astronaut-kiosk -c "mkdir -p /home/astronaut-kiosk/Pictures/wallpapers"
+sudo -u astronaut-kiosk mkdir -p /home/astronaut-kiosk/Pictures/wallpapers
 sudo cp /home/astronaut/.astroarch/configs/kiosk/astroarch-kiosk.png /home/astronaut-kiosk/Pictures/wallpapers/
 
 # Add menu
@@ -31,6 +31,12 @@ sudo cp -r /home/astronaut/.astroarch/configs/kiosk/menus /home/astronaut-kiosk/
 sudo cp -R /home/astronaut/.local/share/kstars /home/astronaut-kiosk/.local/share/
 
 # Adjustment of user rights
-sudo chmod -R 775 /home/astronaut-kiosk
+sudo chmod -R 777 /home/astronaut-kiosk
 sudo chown -R astronaut-kiosk:astronaut-kiosk /home/astronaut-kiosk
+
+# Minimal desktop
+sudo -u astronaut-kiosk ln -snf /home/astronaut/.astroarch/desktop/astroarch-config-kiosk.desktop /home/astronaut-kiosk/Desktop/Astroarch-config-Kiosk
+
+# Allows access to the astronaut group
+sudo chmod -R 770 /home/astronaut
 fi
