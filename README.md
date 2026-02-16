@@ -420,12 +420,21 @@ Sometimes vietual envs are not simply possible, so there are 3 ways to achieve t
 2) open an issue here on github and let me know what python packages you would like to see available to be installed via `pacman`, it will take few days to few weeks depending on availability but it is doable - RECOMMENDED WAY if 1 is not possible
 3) bypass the pip check and force a global install running `sudo pip install --break-system-packages PACKAGE_NAME` - NOT RECOMMENDED and likely to break other dependencies in the long run, if you do so, we do not offer any support, sorry!
 
-# kiosk
+# Kiosk session
 By logging in with the astronaut-kiosk user via your RDP software, you can use a lighter KDE Plasma session
+
+<img width="348" height="357" alt="image" src="https://github.com/user-attachments/assets/d832341b-f2e5-4a8f-92d0-1d32ac57ae05" />
+
+
 This session is designed to run only a few programs. During our astro outings, we only use one or two imaging programs. To do this, simply configure the session with the AstroArch-config-kiosk tool
-You can request to have the software icon on the desktop and/or in the menu
-You can request to launch the software directly when the session starts. You can also set the software to reopen if it is closed. The images folder is accessible from the astroarch user
-You can request your software to save to a folder in the astroarch session or to a removable disk
+
+- You can request to have the software icon on the desktop and/or in the menu
+- You can request to launch the software directly when the session starts. You can also set the software to reopen if it is closed. The images folder is accessible from the astroarch user
+- You can request your software to save to a folder in the astroarch session or to a removable disk
+- You can also retrieve your Kstars configuration with astromonitor
+
+<img width="416" height="358" alt="image" src="https://github.com/user-attachments/assets/a223e6c6-b439-4f9a-b0fc-f9f5d883ebb8" />
+
 
 # Reporting issues
 AstroArch is actually in a stable state, however, should you find any issue please report them here https://github.com/MattBlack85/astroarch/issues this will help me tracking them and ship a fix for them
