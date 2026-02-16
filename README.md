@@ -421,7 +421,7 @@ Sometimes vietual envs are not simply possible, so there are 3 ways to achieve t
 3) bypass the pip check and force a global install running `sudo pip install --break-system-packages PACKAGE_NAME` - NOT RECOMMENDED and likely to break other dependencies in the long run, if you do so, we do not offer any support, sorry!
 
 # Kiosk session
-By logging in with the astronaut-kiosk user via your RDP software, you can use a lighter KDE Plasma session
+You can use a lighter KDE Plasma session by logging out of the astronaut session and logging in with the astronaut-kiosk user via your LAN or RDP/VNC software
 
 <img width="348" height="357" alt="image" src="https://github.com/user-attachments/assets/d832341b-f2e5-4a8f-92d0-1d32ac57ae05" />
 
@@ -433,7 +433,39 @@ This session is designed to run only a few programs. During our astro outings, w
 - You can request your software to save to a folder in the astroarch session or to a removable disk
 - You can also retrieve your Kstars configuration with astromonitor
 
-<img width="416" height="358" alt="image" src="https://github.com/user-attachments/assets/a223e6c6-b439-4f9a-b0fc-f9f5d883ebb8" />
+<img width="272" height="301" alt="image" src="https://github.com/user-attachments/assets/61291a8a-ef06-4d95-8d22-d2e39083e013" />
+
+After selecting the software to install, the following window shows you the configuration status. Either the status is disabled and the line is not highlighted. Click on it to select and enable or disable it
+
+<img width="272" height="301" alt="image" src="https://github.com/user-attachments/assets/29702eaa-a2fe-44d9-8f0e-350640b87ddb" />
+
+- Example: the window shows you the status for Kstars
+
+<img width="272" height="301" alt="image" src="https://github.com/user-attachments/assets/dbd79c40-e618-4a10-a14c-adb67b872107" />
+
+- Select the options and then click OK
+
+<img width="272" height="301" alt="image" src="https://github.com/user-attachments/assets/a997f694-767e-4b72-a855-4f85a2ca25c8" />
+
+- Reopen the window. Now the choices you made previously are active and automatically highlighted. To deactivate them, perform the reverse operation
+- Following the selection, you must log out and/or restart the pi
+
+You can see the status of all software with the status of the current configuration
+
+
+<img width="691" height="487" alt="image" src="https://github.com/user-attachments/assets/c591cb47-ce97-43a1-850a-8ffc6df9f148" />
+
+
+- Restore your Kstars configuration with your astromonitor key
+
+
+<img width="268" height="293" alt="image" src="https://github.com/user-attachments/assets/79c0b11f-d726-4e5a-ae53-97e3125559e4" />
+
+
+
+<img width="200" height="126" alt="image" src="https://github.com/user-attachments/assets/2ff1f30d-4519-4598-827a-4f42e7f6068d" />
+
+
 
 
 # Reporting issues
