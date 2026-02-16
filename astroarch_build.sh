@@ -274,6 +274,15 @@ sudo cp -r /home/astronaut/.astroarch/configs/kiosk/menus /home/astronaut-kiosk/
 # Copy kstars folders
 cp -R /home/astronaut/.local/share/kstars /home/astronaut-kiosk/.local/share/
 
+su astronaut-kiosk -c "cat <<EOF >/home/astronaut-kiosk/.config/plasmanotifyrc
+[DoNotDisturb]
+WhenFullscreen=false
+WhenScreensMirrored=false
+EOF"
+
+# Copy the screensaver config, by default it is off
+su astronaut-kiosk -c "cp /home/astronaut/.astroarch/configs/kscreenlockerrc /home/astronaut-kiosk/.config/kscreenlockerrc"
+
 # Adjustment of user rights
 chmod -R 777 /home/astronaut-kiosk
 chown -R astronaut-kiosk:astronaut-kiosk /home/astronaut-kiosk
