@@ -33,7 +33,7 @@ Please find below some (hopefully) useful instructions, if you are here instead 
  - [How to enable an FTP server?](#how-to-enable-ftp)
  - [Where can I find more packages?](#where-to-find-more-pacakges)
  - [How can I install Python packages?](#how-to-install-python-packages)
- - [Use the kiosk session](#kiosk)
+ - [Use the kiosk session](#kiosk-session)
  - [reporting problems](#reporting-issues)
  - [For PC/mini PC running an ArchLinux derived distro (Manjaro, ArcoLinux, etc.)](#use-only-the-astro-packages-mantained-for-astroarch-on-pc-and-mini-pc)
  - [Tips](#tips)
