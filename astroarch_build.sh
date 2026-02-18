@@ -162,7 +162,9 @@ chmod u=rw,g=r /etc/xrdp/rsakeys.ini
 chmod 755 /etc/xrdp/cert.pem
 chmod 755 /etc/xrdp/key.pem
 # Allows adding devices from the xorg.conf.d section
-sed -i '/Option "AutoAddDevices" "off"/s/^/#/' /etc/X11/xrdp/xorg.conf
+sudo sed -i 's|    Option "DPMS"|    Option "DPMS" "false"|g' /etc/X11/xrdp/xorg.conf
+sudo sed -i 's|bitmap_compression=true|bitmap_compression=false|g' /etc/xrdp/xrdp.ini
+sudo sed -i 's|bulk_compression=true|bulk_compression=false|g' /etc/xrdp/xrdp.ini
 # Improve xrdp & network
 cp /home/astronaut/.astroarch/configs/99-sysctl.conf /etc/sysctl.d
 
