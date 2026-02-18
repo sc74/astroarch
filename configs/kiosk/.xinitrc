@@ -2,6 +2,10 @@
 
 export DESKTOP_SESSION=plasma
 export XDG_MENU_PREFIX=plasma-
+export KWIN_X11_NO_QUIRKS=1
+export KWIN_X11_FORCE_SOFTWARE_OPENGL=1
+export KWIN_COMPOSE=N
+export KWIN_X11_NO_QUIRKS=1
 
 rm -f $HOME/.cache/menus/*
 rm -f $HOME/.cache/ksycoca6*
@@ -15,7 +19,11 @@ KWIN_PID=$!
 plasmashell &
 SHELL_PID=$!
 
-/home/astronaut-kiosk/.local/bin/00-init-layout.sh &
+FLAG_FILE="$HOME/.config/kiosk_setup_done"
+
+if [ ! -f "$FLAG_FILE" ]; then
+    /home/astronaut-kiosk/.local/bin/00-init-layout.sh &
+fi
 
 # App monitoring
 watch_apps() {

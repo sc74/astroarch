@@ -162,9 +162,11 @@ chmod u=rw,g=r /etc/xrdp/rsakeys.ini
 chmod 755 /etc/xrdp/cert.pem
 chmod 755 /etc/xrdp/key.pem
 # Allows adding devices from the xorg.conf.d section
-sed -i '/Option "AutoAddDevices" "off"/s/^/#/' /etc/X11/xrdp/xorg.conf
-# Hide user xrdp daemon
-cp /home/astronaut/.astroarch/configs/hide-users.conf /etc/sddm.conf.d/
+sed -i 's|    Option "DPMS"|    Option "DPMS" "false"|g' /etc/X11/xrdp/xorg.conf
+sed -i 's|bitmap_compression=true|bitmap_compression=false|g' /etc/xrdp/xrdp.ini
+sed -i 's|bulk_compression=true|bulk_compression=false|g' /etc/xrdp/xrdp.ini
+# Improve xrdp & network
+cp /home/astronaut/.astroarch/configs/99-sysctl.conf /etc/sysctl.d
 
 #
 su astronaut -c "cat <<EOF >/home/astronaut/.config/plasmanotifyrc
