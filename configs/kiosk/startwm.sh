@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 CURRENT_USER="${USER:-${LOGNAME}}"
+export XDG_RUNTIME_DIR="/run/user/$(id -u)"
 
 case "${CURRENT_USER}" in
     astronaut)

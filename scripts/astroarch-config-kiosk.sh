@@ -4,6 +4,45 @@
 XINITRC="/home/astronaut-kiosk/.xinitrc"
 MENU_FILE="/home/astronaut-kiosk/.config/menus/plasma-applications.menu"
 
+DESKTOP_DIR="/home/astronaut-kiosk/Desktop"
+
+declare -A DESKTOP_APPS
+DESKTOP_APPS['APPS\["/usr/share/applications/org.kde.kstars.desktop"\]']="/usr/share/applications/org.kde.kstars.desktop|Kstars"
+DESKTOP_APPS['APPS\["/usr/share/applications/phd2.desktop"\]']="/usr/share/applications/phd2.desktop|PHD2"
+DESKTOP_APPS['APPS\["/usr/share/applications/astrodmx_capture.desktop"\]']="/usr/share/applications/astrodmx_capture.desktop|AstroDMx Capture"
+DESKTOP_APPS['APPS\["/usr/share/applications/xgps.desktop"\]']="/usr/share/applications/xgps.desktop|xgps"
+
+desktop_icon_state() {
+    local key="$1"
+    local data="${DESKTOP_APPS[$key]}"
+    [ -z "$data" ] && return 1
+
+    local src="${data%%|*}"
+    local name="${data##*|}"
+    local dest="$DESKTOP_DIR/$name"
+
+    [ -L "$dest" ] && echo "Enabled" || echo "Disabled"
+}
+
+set_desktop_icon() {
+    local state="$1"
+    local key="$2"
+
+    local data="${DESKTOP_APPS[$key]}"
+    [ -z "$data" ] && return 1
+
+    local src="${data%%|*}"
+    local name="${data##*|}"
+    local dest="$DESKTOP_DIR/$name"
+
+    if [ "$state" = "on" ]; then
+        ln -snf "$src" "$dest"
+    else
+        rm -f "$dest"
+    fi
+}
+
+
 # Verify that the files exist
 if [ ! -f "$XINITRC" ]; then
     kdialog --error "File $XINITRC not found!"
@@ -18,6 +57,11 @@ fi
 is_active() {
     local file="$1"
     local pattern="$2"
+
+    if [[ -n "${DESKTOP_APPS[$pattern]}" ]]; then
+        desktop_icon_state "$pattern"
+        return
+    fi
 
     if [[ "$file" == *.menu ]]; then
         if grep -E "^[[:space:]]*<Filename>$pattern</Filename>" "$file" >/dev/null 2>&1; then
@@ -38,6 +82,11 @@ is_active() {
 set_state_bash() {
     local state="$1"
     local pattern="$2"
+
+    if [[ -n "${DESKTOP_APPS[$pattern]}" ]]; then
+        set_desktop_icon "$state" "$pattern"
+        return
+    fi
 
     if [ "$state" = "on" ]; then
         sed -i "s|^\([[:space:]]*\)#\+\(.*$pattern.*\)|\1\2|g" "$XINITRC"
