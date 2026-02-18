@@ -10,7 +10,7 @@ sudo usermod -aG uucp,sys,network,power,audio,input,lp,storage,video,users,astro
 sudo usermod -aG astronaut-kiosk astronaut
 sudo chmod -R 770 /home/astronaut-kiosk
 sudo -u astronaut-kiosk  LC_ALL=C.UTF-8 xdg-user-dirs-update --force
-mkdir -p /home/astronaut-kiosk/.local/{bin,share,state}
+sudo mkdir -p /home/astronaut-kiosk/.local/{bin,share,state}
 
 # New Xrdp launcher for astronaut and astronaut-kiosk sessions
 sudo cp /home/astronaut/.astroarch/configs/kiosk/45-allow-shutdown-xrdp.rules /etc/polkit-1/rules.d/
@@ -30,11 +30,12 @@ sudo -u astronaut cp /home/astronaut/.astroarch/configs/kscreenlockerrc /home/as
 # Add menu
 sudo cp -r /home/astronaut/.astroarch/configs/kiosk/menus /home/astronaut-kiosk/.config/
 
-# Minimal desktop
-sudo -u astronaut-kiosk ln -snf /home/astronaut/.astroarch/desktop/astroarch-config-kiosk.desktop /home/astronaut-kiosk/Desktop/Astroarch-config-Kiosk
-
 # Adjustment of user rights
 sudo chmod -R 770 /home/astronaut-kiosk
 sudo chown -R astronaut-kiosk:astronaut-kiosk /home/astronaut-kiosk
+sudo chmod -R 770 /home/astronaut
+
+# Minimal desktop
+sudo ln -snf /home/astronaut/.astroarch/desktop/astroarch-config-kiosk.desktop /home/astronaut-kiosk/Desktop/
 
 fi

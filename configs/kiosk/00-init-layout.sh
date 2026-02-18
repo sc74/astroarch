@@ -29,12 +29,7 @@ for (var i in panels) {
         // Kickoff favorites
         if (widgets[j].type === "org.kde.plasma.kickoff") {
             widgets[j].currentConfigGroup = ["Configuration", "General"];
-            widgets[j].writeConfig("favorites", [
-                "applications:org.kde.kstars.desktop",
-                "applications:phd2.desktop",
-                "applications:astrodmx_capture.desktop",
-                "applications:xgps.desktop"
-            ]);
+            widgets[j].writeConfig("favorites", []);
             widgets[j].writeConfig("systemFavorites", false);
             widgets[j].reloadConfig();
         }
