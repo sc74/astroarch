@@ -109,6 +109,7 @@ rm -f /usr/lib/systemd/system/novnc.service
 
 # Synchronize the system time with the GPS if there is no Real Time Clock (RTC) or network connection to the Raspberry Pi
 sed -i '$a\refclock SHM 0 offset 0.5 delay 0.2 refid NMEA' /etc/chrony.conf
+sed -i '$a\driftfile /var/lib/chrony/drift' /etc/chrony.conf
 
 # Disable systemd-timesyncd and enable chronyd
 systemctl disable systemd-timesyncd
@@ -162,6 +163,8 @@ chmod 755 /etc/xrdp/cert.pem
 chmod 755 /etc/xrdp/key.pem
 # Allows adding devices from the xorg.conf.d section
 sed -i '/Option "AutoAddDevices" "off"/s/^/#/' /etc/X11/xrdp/xorg.conf
+# Improve xrdp & network
+cp /home/astronaut/.astroarch/configs/99-sysctl.conf /etc/sysctl.d
 
 #
 su astronaut -c "cat <<EOF >/home/astronaut/.config/plasmanotifyrc
