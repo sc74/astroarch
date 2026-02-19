@@ -43,4 +43,8 @@ for (var i in panels) {
     }
 }'
 
+kwriteconfig6 --file kscreenlockerrc --group Daemon --key Autolock false
+kwriteconfig6 --file kscreenlockerrc --group Daemon --key Timeout 0
+qdbus6 org.freedesktop.ScreenSaver /ScreenSaver configure
+
 touch "$FLAG_FILE"

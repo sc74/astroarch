@@ -23,14 +23,11 @@ sudo cp /home/astronaut/.astroarch/configs/kiosk/astroarch-kiosk.png /home/astro
 
 # Config plasma
 sudo cp /home/astronaut/.astroarch/configs/kiosk/00-init-layout.sh /home/astronaut-kiosk/.local/bin/
-sudo chmod +x /home/astronaut-kiosk/.local/bin/00-init-layout.sh
-sudo chown astronaut-kiosk:astronaut-kiosk /home/astronaut-kiosk/.local/bin/00-init-layout.sh
-sudo -u astronaut cp /home/astronaut/.astroarch/configs/kscreenlockerrc /home/astronaut/.config/kscreenlockerrc
 
 # Add menu
 sudo cp -r /home/astronaut/.astroarch/configs/kiosk/menus /home/astronaut-kiosk/.config/
 
-# Adjustment of user rights
+# Adjusting user rights for group access
 sudo chmod -R 770 /home/astronaut-kiosk
 sudo chown -R astronaut-kiosk:astronaut-kiosk /home/astronaut-kiosk
 sudo chmod -R 770 /home/astronaut
