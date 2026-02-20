@@ -161,10 +161,11 @@ chown root:xrdp /etc/xrdp/rsakeys.ini
 chmod u=rw,g=r /etc/xrdp/rsakeys.ini
 chmod 755 /etc/xrdp/cert.pem
 chmod 755 /etc/xrdp/key.pem
-# Allows adding devices from the xorg.conf.d section
-sudo sed -i 's|    Option "DPMS"|    Option "DPMS" "false"|g' /etc/X11/xrdp/xorg.conf
-sudo sed -i 's|bitmap_compression=true|bitmap_compression=false|g' /etc/xrdp/xrdp.ini
-sudo sed -i 's|bulk_compression=true|bulk_compression=false|g' /etc/xrdp/xrdp.ini
+# Disables the display's power management features
+sed -i 's/Option "DPMS"/& "false"/' /etc/X11/xrdp/xorg.conf
+# Disabling compression can speed up local connections on low-power devices
+sed -i 's|bitmap_compression=true|bitmap_compression=false|g' /etc/xrdp/xrdp.ini
+sed -i 's|bulk_compression=true|bulk_compression=false|g' /etc/xrdp/xrdp.ini
 # Improve xrdp & network
 cp /home/astronaut/.astroarch/configs/99-sysctl.conf /etc/sysctl.d
 
