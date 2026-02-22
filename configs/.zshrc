@@ -196,14 +196,14 @@ function update-astroarch()
         notify-send --app-name 'AstroArch' --icon="/home/astronaut/.astroarch/assets/icons/novnc-icon.svg" -t 15000 'Update AstroArch' "⚠️  Dependency risks detected. Details saved to $RISK_LOG"
 
         # Confirmation request via kdialog
-        local PROCEED_UPDATE=0
+        local PROCEED_UPDATE=1
         # Test : GUI ?
         if [[ -n "$DISPLAY" && -z "$SSH_CLIENT" && -z "$SSH_TTY" ]]; then
             kdialog --title "AstroArch Update - Risk of Addiction" \
                 --warningyesno "Warning! The following critical packages will have their dependencies changed:\n\n- $list_str\n\nDo you want to proceed the update anyway?"
             [[ $? -ne 0 ]] && PROCEED_UPDATE=0
         else
-            # Terminal mode
+            # Terminal mode no GUI
             echo -e "\n⚠️  WARNING: Critical dependencies will change!"
             echo -e "$list_str"
             echo -n "Do you want to proceed the update anyway? (y/N): "
