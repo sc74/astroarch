@@ -19,12 +19,5 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: astroarch
-        run: bash astroarch_build.sh
+        run: bash ci/astroarch_build.sh
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: pkg-ckbcomp-aarch64
-          path: packages/ckbcomp/*.pkg.tar.xz
-          if-no-files-found: error
-          retention-days: 14
