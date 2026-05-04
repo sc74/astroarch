@@ -1,0 +1,28 @@
+name: Build astroarch
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-astroarch:
+    name: "Build"
+    runs-on: ["self-hosted"]
+    container:
+      image: ghcr.io/devducks/archlinuxarm:latest
+    timeout-minutes: 15
+    steps:
+      - name: Bootstrap pacman keyring
+        run: pacman-key --init && pacman-key --populate archlinuxarm && pacman -Syu --noconfirm
+
+      - uses: actions/checkout@v4
+
+      - name: astroarch
+        run: bash astroarch_build.sh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pkg-ckbcomp-aarch64
+          path: packages/ckbcomp/*.pkg.tar.xz
+          if-no-files-found: error
+          retention-days: 14
