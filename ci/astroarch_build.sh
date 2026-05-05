@@ -180,14 +180,14 @@ su astronaut -c "mkdir -p /home/astronaut/.local/share/kstars/astrometry"
 
 # Enable now all services
 #systemctl enable sddm.service \
-	  novnc.service \
-	  dhcpcd.service \
-	  NetworkManager.service \
-	  avahi-daemon.service \
-	  nmb.service \
-	  smb.service \
-	  xrdp.service \
-	  xrdp-sesman.service
+#	  novnc.service \
+#	  dhcpcd.service \
+#	  NetworkManager.service \
+#	  avahi-daemon.service \
+#	  nmb.service \
+#	  smb.service \
+#	  xrdp.service \
+#	  xrdp-sesman.service
 
 # If we are on qemu, enable also the AP creation and resize scripts
     #systemctl enable create_ap.service resize_once.service
