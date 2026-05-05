@@ -11,6 +11,7 @@ jobs:
     runs-on: ["self-hosted"]
     container:
       image: ghcr.io/devducks/archlinuxarm:latest
+      options: --privileged
     timeout-minutes: 15
     steps:
       - name: Bootstrap pacman keyring

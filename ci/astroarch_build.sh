@@ -86,9 +86,9 @@ chown -R astronaut:astronaut /home/astronaut/.oh-my-zsh/
 
 # Set the samba pass
 ln -s /home/astronaut/.astroarch/configs/smb.conf /etc/samba/smb.conf
-#systemctl start smb
+systemctl start smb
 (echo astro; echo astro) | smbpasswd -s -a astronaut
-#systemctl stop smb
+systemctl stop smb
 
 # Link a zsh config for astronaut
 ln -s /home/astronaut/.astroarch/configs/.zshrc /home/astronaut/.zshrc
@@ -97,7 +97,7 @@ ln -s /home/astronaut/.astroarch/configs/.zshrc /home/astronaut/.zshrc
 ln -s /home/astronaut/.astroarch/configs/default-wifi-powersave-off.conf /etc/NetworkManager/conf.d
 
 # Start NetworkManager and sleep to create the hotspot
-#systemctl start NetworkManager
+systemctl start NetworkManager
 sleep 5
 
 # Remove eventually existing systemd configs we are going to substitute
@@ -108,8 +108,8 @@ sed -i '$a\refclock SHM 0 offset 0.5 delay 0.2 refid NMEA' /etc/chrony.conf
 sed -i '$a\driftfile /var/lib/chrony/drift' /etc/chrony.conf
 
 # Disable systemd-timesyncd and enable chronyd
-#systemctl disable systemd-timesyncd
-#systemctl enable chronyd
+systemctl disable systemd-timesyncd
+systemctl enable chronyd
 
 # Symlink now files
 ln -s /home/astronaut/.astroarch/configs/kde_settings.conf /etc/sddm.conf.d/kde_settings.conf
@@ -137,7 +137,7 @@ cp /home/astronaut/.astroarch/configs/50-networkmanager.rules /etc/polkit-1/rule
 cp /home/astronaut/.astroarch/systemd/create_ap.service /etc/systemd/system/
 
 # Enable vncserver
-#systemctl enable x0vncserver
+systemctl enable x0vncserver
 
 # Enable xrdp
 mv /etc/xrdp/startwm.sh /etc/xrdp/startwm.sh-old
@@ -179,18 +179,18 @@ su astronaut -c "cp /home/astronaut/.astroarch/configs/kwinrc /home/astronaut/.c
 su astronaut -c "mkdir -p /home/astronaut/.local/share/kstars/astrometry"
 
 # Enable now all services
-#systemctl enable sddm.service \
-#	  novnc.service \
-#	  dhcpcd.service \
-#	  NetworkManager.service \
-#	  avahi-daemon.service \
-#	  nmb.service \
-#	  smb.service \
-#	  xrdp.service \
-#	  xrdp-sesman.service
+systemctl enable sddm.service \
+	  novnc.service \
+	  dhcpcd.service \
+	  NetworkManager.service \
+	  avahi-daemon.service \
+	  nmb.service \
+	  smb.service \
+	  xrdp.service \
+	  xrdp-sesman.service
 
 # If we are on qemu, enable also the AP creation and resize scripts
-    #systemctl enable create_ap.service resize_once.service
+    systemctl enable create_ap.service resize_once.service
 
 # Take sudoers to the original state
 sed -i 's/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/g' /etc/sudoers
