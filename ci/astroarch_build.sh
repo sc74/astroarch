@@ -31,7 +31,13 @@ su astronaut -c "git clone https://github.com/devDucks/astroarch.git /home/astro
 # Uncomment en_US UTF8 and generate locale files
 sed -i -e 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
 locale-gen
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
+export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
+
+# Prevent PackageKit hook from failing in container (no D-Bus)
+printf '#!/bin/sh\nexit 0\n' > /usr/local/bin/pkcon
+chmod +x /usr/local/bin/pkcon
 
 # If we are on QEMU, packages have already been pulled in the docker phase - install only the pi kernel
 pacman -Rdd linux-aarch64 --noconfirm
@@ -252,7 +258,9 @@ echo "127.0.1.1          astroarch" >> /etc/hosts
 su astronaut -c "cp /home/astronaut/.astroarch/configs/kscreenlockerrc /home/astronaut/.config/kscreenlockerrc"
 
 # Set a standard TZ to avoid breaking plasma clock widget
-timedatectl set-timezone Europe/London
+#timedatectl set-timezone Europe/London
+ln -sf /usr/share/zoneinfo/Europe/London /etc/localtime
+echo "Europe/London" > /etc/timezone
 
 # If we are on a raspberry let's adjust /boot/config.txt
 cp /home/astronaut/.astroarch/configs/config.txt /boot/config.txt
