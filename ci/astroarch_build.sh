@@ -31,12 +31,13 @@ su astronaut -c "git clone https://github.com/devDucks/astroarch.git /home/astro
 # Uncomment en_US UTF8 and generate locale files
 sed -i -e 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
 locale-gen
+export LC_ALL=en_US.UTF-8
 
 # If we are on QEMU, packages have already been pulled in the docker phase - install only the pi kernel
+pacman -Rdd linux-aarch64 --noconfirm
+pacman -Sy linux-rpi linux-rpi-headers linux-firmware --noconfirm
 
-echo "yes" | pacman -Syu linux-rpi linux-rpi-headers linux-firmware --noconfirm --ask 4
-
-pacman -Syu base-devel pipewire-jack gnu-free-fonts wireplumber \
+pacman -Sy base-devel pipewire-jack gnu-free-fonts wireplumber \
        zsh plasma-desktop sddm networkmanager xf86-video-dummy \
        network-manager-applet networkmanager-qt xorg konsole \
        gpsd breeze-icons hicolor-icon-theme knewstuff tigervnc \
